@@ -1,6 +1,8 @@
 body {
     background-color: rgb(43, 39, 39);
+    max-width: 100%;
 }
+
 .head-container {
     display: flex;
     justify-content: space-between;
@@ -21,4 +23,20 @@ body {
     font-size: 20px;
     background-color: rgb(221, 140, 34);
     color: rgb(245, 245, 245);
+}
+.navigation-container .search-bar input{
+    background-color: whitesmoke;
+}
+
+.anime-container-list {
+    margin-top: 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    border: solid black 2px;
+}
+
+.anime-container {
+    border: solid black 1px;
+    padding: 6rem;
 }
