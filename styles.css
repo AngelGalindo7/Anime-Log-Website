@@ -14,6 +14,7 @@ body {
     display: flex;
     gap: 0px;
     margin: 0;
+    justify-content: space-between;
 }
 .navigation-container button {
     margin: 0px;
@@ -21,4 +22,7 @@ body {
     font-size: 20px;
     background-color: rgb(221, 140, 34);
     color: rgb(245, 245, 245);
+}
+.navigation-container .search-bar input{
+    background-color: whitesmoke;
 }
