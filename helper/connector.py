@@ -1,5 +1,5 @@
 import csv
-import mysql.connector
+import mysql.connector 
 # python3 -m pip install mysql-connector-python
 # MySQL connection parameters
 cnx = mysql.connector.connect(user='friend', password='hi', host='76.133.198.181', database='new_schema')
