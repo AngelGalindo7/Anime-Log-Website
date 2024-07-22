@@ -26,13 +26,14 @@ def login():
 
 @routes.route('/recommendation')
 def recommendation():
+    print("HI")
     return render_template('recommendation.html')
 
 @routes.route('/search')
 def search():
     # Hardcoded to search for naruto
     query = 'Naruto'
-    "SEARCH?"
+    print("SEARCH?")
     #connect to database
     conn = mysql.connection
     cursor = conn.cursor()
