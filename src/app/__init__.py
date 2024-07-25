@@ -1,7 +1,6 @@
 from flask import Flask,render_template, jsonify, request
 from flask_mysqldb import MySQL
 import mysql.connector
-#from flask_sqlalchemy import SQLAlchemy
 
 from . import config
 
@@ -25,7 +24,7 @@ def create_app():
     def index():
         return render_template('index.html')
 
-    @app.route('/about')
+    @app.route('/main/about')
     def about():
         return render_template('about.html')
 
