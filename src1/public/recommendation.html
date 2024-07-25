@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommendations</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/recommendation')
+                .then(response => response.json())
+                .then(data => {
+                    const resultsContainer = document.getElementById('results');
+                    resultsContainer.innerHTML = data.map(item => `<li>${item.name}</li>`).join('');
+                })
+                .catch(error => {
+                    console.error('Error fetching recommendations:', error);
+                });
+        });
+    </script>
+</head>
+<body>
+    <h1>Recommendations</h1>
+    <ul id="results">
+        <!-- Recommendations will be displayed here -->
+    </ul>
+</body>
+</html>
