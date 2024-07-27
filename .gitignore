@@ -8,7 +8,11 @@
 ehthumbs.db
 Thumbs.db
 
+#config file for MySQL
 .env
+
+#helper function used to import data information onto MySQL
+/helper/connector.py
 
 __pycache__/
 config.py
