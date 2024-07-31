@@ -26,3 +26,36 @@ body {
 .navigation-container .search-bar input{
     background-color: whitesmoke;
 }
+
+.search-bar{
+    position: relative;
+    width: 300px;
+}
+
+#search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px; /* Adjust height as needed */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: rgb(221, 140, 34);
+    z-index: 1000;
+    /* display: none; /* Hide by default */
+}
+
+.result-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.result-item:hover {
+    background-color: #f1f1f1;
+}
+
+.search-bar input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}

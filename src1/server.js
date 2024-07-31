@@ -27,7 +27,7 @@ db.connect(err => {
 
 // Serve static files (e.g., index.html)
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/recommendation', (req, res) => {
@@ -58,12 +58,11 @@ app.get('/test', (req, res) => {
     res.send('Test route is working!');
 });
 
-app.post('/submit', (req, res) => {
-    console.log("Hey")
+app.post('/search', (req, res) => {
     const searchQuery = req.body.search;
 
-    const query = 'SELECT name FROM anime_filtered WHERE name LIKE ? LIMIT 20';
-    const formattedQuery = mysql.format(query, [`%${searchQuery}%`]);
+    const query = 'SELECT name FROM anime_filtered WHERE name LIKE ? OR English_name LIKE ? ORDER BY Popularity ASC LIMIT 5';
+    const formattedQuery = mysql.format(query, [`%${searchQuery}%`, `%${searchQuery}%`]);
 
     db.query(formattedQuery, (err, results) => {
         if (err) {
@@ -74,8 +73,8 @@ app.post('/submit', (req, res) => {
 
         // Print results to the terminal
         console.log('Query Results:', results);
+        res.json({results});
     });
-    res.send('Search query saved successfully!');
     });
 //});
 

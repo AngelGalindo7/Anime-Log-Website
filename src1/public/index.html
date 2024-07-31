@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
         <div class="head-container">
@@ -21,11 +22,33 @@
                 <a href="about.html"> <button type="button">About</button> </a>
             </div>
             <div class="search-bar">
-                <form action="/submit" method = "POST">
-                    <input type="text" placeholder="Search.." name="search">
-                    <button type="submit"></button>
-                  </form>
+                    <input type="text" placeholder="Search.." name="search" id="search">
+                    <div id="search-results"></div>
             </div>
         </div>
+        <script>
+            $(document).ready(function() {
+                $('#search').on('input', function() {
+                    let query = $(this).val();
+                    if (query.length > 0) {
+                        $.ajax({
+                            url: '/search',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ search: query }),
+                            success: function(response) {
+                                let resultsDiv = $('#search-results');
+                                resultsDiv.empty();
+                                response.results.forEach(function(result) {
+                                    resultsDiv.append('<div class="result-item">' + result.name + '</div>');
+                                });
+                            }
+                        });
+                    } else {
+                        $('#search-results').empty();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
