@@ -72,7 +72,7 @@ app.post('/search', (req, res) => {
         }
 
         // Print results to the terminal
-        console.log('Query Results:', results);
+        //console.log('Query Results:', results);
         res.json({results});
     });
     });

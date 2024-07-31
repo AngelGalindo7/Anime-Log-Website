@@ -23,32 +23,56 @@
             </div>
             <div class="search-bar">
                     <input type="text" placeholder="Search.." name="search" id="search">
+                    <button type="button" class="search-button"><img src="MagnifyingGlass.jpg" alt="search-img" class="button-img"></button>
                     <div id="search-results"></div>
             </div>
         </div>
         <script>
             $(document).ready(function() {
-                $('#search').on('input', function() {
-                    let query = $(this).val();
-                    if (query.length > 0) {
-                        $.ajax({
-                            url: '/search',
-                            method: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify({ search: query }),
-                            success: function(response) {
-                                let resultsDiv = $('#search-results');
-                                resultsDiv.empty();
+            let resultsDiv = $('#search-results');
+            let searchInput = $('#search');
+
+            searchInput.on('input', function() {
+                let query = $(this).val();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: '/search',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ search: query }),
+                        success: function(response) {
+                            resultsDiv.empty();
+                            if (response.results.length > 0) {
+                                resultsDiv.show();
                                 response.results.forEach(function(result) {
                                     resultsDiv.append('<div class="result-item">' + result.name + '</div>');
                                 });
+                            } else {
+                                resultsDiv.hide();
                             }
-                        });
-                    } else {
-                        $('#search-results').empty();
-                    }
-                });
+                        }
+                    });
+                } else {
+                    resultsDiv.empty().hide();
+                }
             });
+
+            $(document).on('click', function(event) {
+                if (!$(event.target).closest('.search-bar').length) {
+                    resultsDiv.hide();
+                }
+            });
+
+            searchInput.on('focus', function() {
+                if (resultsDiv.children().length > 0) {
+                    resultsDiv.show();
+                }
+            });
+
+            resultsDiv.on('mousedown', function(e) {
+                e.stopPropagation();
+            });
+        });
         </script>
     </body>
 </html>
