@@ -25,13 +25,25 @@ db.connect(err => {
     console.log('Connected to MySQL');
 });
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 // Serve static files (e.g., index.html)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/recommendation', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'recommendation.html'));
+    //res.sendFile(path.join(__dirname, 'public', 'recommendation.html'));
+    res.render('index', { title: 'IM AT THE RECOMMENDATION PAGE' });
+});
+
+app.get('/about', (req, res) => {
+    res.render('index', { title: 'IM AT THE ABOUT PAGE' });
+});
+
+app.get('/list', (req, res) => {
+    res.render('index', { title: 'IM AT THE LIST PAGE' });
 });
 
 // Handle /recommendation route
@@ -110,19 +122,14 @@ app.post('/search', (req, res) => {
             return;
         }
 
-        // Print results to the terminal
-        //console.log('Query Results:', results);
         res.json({results});
     });
-    });
-//});
+});
 
 // Handle all other routes
 app.use((req, res) => {
     res.status(404).send('404 - Not Found');
 });
-
-
 
 // Start the server
 app.listen(port, () => {

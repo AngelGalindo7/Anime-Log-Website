@@ -149,3 +149,7 @@ body {
 #submit-button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+h1 {
+    color: #ffffff;
+}
