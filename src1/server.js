@@ -57,6 +57,12 @@ app.get('/test', (req, res) => {
     console.log('Received request for /test');
     res.send('Test route is working!');
 });
+
+
+app.get('/create-account', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'create-account.html'));
+});
+
 app.post('/create-account', (req, res) => {
     const { username, email, password, 'confirm-password': confirmPassword } = req.body;
 
