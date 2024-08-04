@@ -86,28 +86,26 @@ body {
 /* General styles for the body */
 #account-page-body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0; /* Light background color for contrast */
+    background-color: rgb(43, 39, 39); /* Dark gray background for contrast */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
     height: 100vh; /* Full viewport height */
     margin: 0;
 }
 
-/* Container for the form */
+/* Style the white box (form container) */
 #account-container {
-    background-color: #ffffff; /* White background for the form container */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a lifted effect */
-    max-width: 400px;
-    width: 100%;
-    box-sizing: border-box;
+    background-color: white; /* White background for the box */
+    padding: 40px; /* Add padding inside the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    width: 300px; /* Fixed width for the form container */
 }
 
 /* Title of the form */
 #account-title {
-    text-align: center;
+    text-align: center; /* Center the title text */
     color: #333333; /* Dark color for the title text */
     margin-bottom: 20px;
 }
@@ -127,29 +125,34 @@ body {
 
 /* Input field styling */
 .form-group input {
-    width: 100%;
-    padding: 10px;
+    width: 100%; /* Make the input boxes fill the form's width */
+    padding: 10px; /* Add some padding for better appearance */
+    box-sizing: border-box; /* Ensure padding is included in the element's width/height */
     border: 1px solid #cccccc; /* Light border for input fields */
-    border-radius: 4px;
-    box-sizing: border-box;
+    border-radius: 4px; /* Rounded corners for input fields */
 }
 
 /* Styling for the submit button */
 #submit-button {
-    background-color: #007bff; /* Blue background for the button */
-    color: #ffffff; /* White text for contrast */
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgb(221, 140, 34); /* Orange background for the button */
+    color: white; /* White text for contrast */
     border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    border-radius: 5px; /* Rounded corners for the button */
     width: 100%; /* Full width button */
+    font-size: 16px; /* Increase font size for better readability */
 }
 
 #submit-button:hover {
+<<<<<<< HEAD
     background-color: #0056b3; /* Darker blue on hover */
 }
 
 h1 {
     color: #ffffff;
+=======
+    background-color: rgb(182, 114, 25); /* Darker orange on hover */
+>>>>>>> 260c6d0d253b6a2ea8d711ca05f9e0f41fe33057
 }
