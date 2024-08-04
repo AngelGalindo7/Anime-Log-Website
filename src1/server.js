@@ -57,6 +57,45 @@ app.get('/test', (req, res) => {
     console.log('Received request for /test');
     res.send('Test route is working!');
 });
+app.post('/create-account', (req, res) => {
+    const { username, email, password, 'confirm-password': confirmPassword } = req.body;
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        return res.status(400).send('Passwords do not match!');
+    }
+
+    // Check for existing username or email
+    const checkQuery = 'SELECT * FROM users WHERE username = ? OR email = ?';
+    const formattedCheckQuery = mysql.format(checkQuery, [username, email]);
+
+    db.query(formattedCheckQuery, (err, results) => {
+        if (err) {
+            console.error('Error checking for existing user:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (results.length > 0) {
+            // User with the same username or email already exists
+            return res.status(400).send('Username or email already exists!');
+        }
+
+        // Insert user data into the database
+        const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+        const formattedQuery = mysql.format(query, [username, email, password]);
+
+        db.query(formattedQuery, (err, result) => {
+            if (err) {
+                console.error('Error inserting user data:', err);
+                return res.status(500).send('Error creating account');
+            }
+
+            console.log('User data inserted successfully:', result);
+            res.status(200).send('Account created successfully!');
+        });
+    });
+});
+
 
 app.post('/search', (req, res) => {
     const searchQuery = req.body.search;

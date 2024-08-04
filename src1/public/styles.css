@@ -83,3 +83,69 @@ body {
 .result-item:hover {
     background-color: #f1f1f1;
 }
+/* General styles for the body */
+#account-page-body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* Light background color for contrast */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    margin: 0;
+}
+
+/* Container for the form */
+#account-container {
+    background-color: #ffffff; /* White background for the form container */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a lifted effect */
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Title of the form */
+#account-title {
+    text-align: center;
+    color: #333333; /* Dark color for the title text */
+    margin-bottom: 20px;
+}
+
+/* Styling for each form group */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Label styling */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #666666; /* Medium gray color for labels */
+}
+
+/* Input field styling */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cccccc; /* Light border for input fields */
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Styling for the submit button */
+#submit-button {
+    background-color: #007bff; /* Blue background for the button */
+    color: #ffffff; /* White text for contrast */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%; /* Full width button */
+}
+
+#submit-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
