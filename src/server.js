@@ -4,6 +4,7 @@ const mysql = require('mysql2');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const session = require('express-session');
 
 // Create an Express application
 const app = express();
@@ -25,6 +26,14 @@ db.connect(err => {
     console.log('Connected to MySQL');
 });
 
+// Set up session middleware
+app.use(session({
+    secret: 'your_secret_key', // Change this to a secure key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -32,6 +41,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.get('/', (req, res) => {
+    res.render('index', { loggedIn: req.session.loggedIn });
+});
 
 app.get('/recommendation', (req, res) => {
     //res.sendFile(path.join(__dirname, 'public', 'recommendation.html'));
@@ -75,6 +89,48 @@ app.get('/test', (req, res) => {
     res.send('Test route is working!');
 });
 
+
+app.post('/login', (req, res) => {
+
+    const {email, password} = req.body;
+
+    //Check if emails equal
+    const email_query = 'SELECT * FROM users WHERE email = ?';
+    const formatted_email_Query = mysql.format(email_query, [email]);
+
+    db.query(formatted_email_Query, (err, email_results) => {
+        if (err) {
+            console.error('Error checking for existing email:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (email_results.length != 1) {
+            // User with the same username or email already exists
+            return res.status(400).send('Account does not exist !');
+        }
+
+        //Check if passwords equal
+        const login_query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+        const formatted_login_Query = mysql.format(login_query, [email, password]);
+
+        db.query(formatted_login_Query, (err, login_results) => {
+            if (err) {
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (login_results.length != 1) {
+                // Password doesn't match
+                return res.status(400).send('Incorrect Password!');
+            }
+            res.status(200).send("Return to Main Page GOODJOBB");
+            //TODO: If logged in, loggedIn variable is set to true
+            req.session.loggedIn = true; // Set session variable
+            //res.redirect('/');
+        })
+})
+
+        
+});
 
 
 app.get('/create-account', (req, res) => {

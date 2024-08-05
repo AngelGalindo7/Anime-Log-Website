@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Anime Logger</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="styles.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    </head>
-    <body>
-        <div class="head-container">
-            <h1>Anime Logger</h1>
+<head>
+    <title>Anime Logger</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="head-container">
+        <h1>Anime Logger</h1>
+        <% if (!loggedIn) { %>
             <div class="auth-buttons">
-                <a href="login.html"> <button type="button">Login</button> </a>
-                <a href="create-account.html"> <button type="button">Create Account</button> </a>
+                <a href="/login"> <button type="button">Login</button> </a>
+                <a href="/create-account"> <button type="button">Create Account</button> </a>
             </div>
+        <% } %>
+    </div> <!-- Fixed extra closing div here -->
+    <div class="navigation-container">
+        <div class="navigation-links">
+            <a href="/list"> <button type="button">List</button> </a>
+            <a href="/recommendation"> <button type="button">Recommendation</button> </a>
+            <a href="/about"> <button type="button">About</button> </a>
         </div>
-        <div class="navigation-container">
-            <div class="navigation-links">
-                <a href="/list"> <button type="button">List</button> </a>
-                <a href="/recommendation"> <button type="button">Recommendation</button> </a>
-                <a href="/about"> <button type="button">About</button> </a>
-            </div>
-            <div class="search-bar">
-                    <input type="text" placeholder="Search.." name="search" id="search">
-                    <button type="button" class="search-button"><img src="MagnifyingGlass.jpg" alt="search-img" class="button-img"></button>
-                    <div id="search-results"></div>
-            </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search.." name="search" id="search">
+            <button type="button" class="search-button"><img src="MagnifyingGlass.jpg" alt="search-img" class="button-img"></button>
+            <div id="search-results"></div>
         </div>
-        <script>
-            $(document).ready(function() {
+    </div>
+    <script>
+        $(document).ready(function() {
             let resultsDiv = $('#search-results');
             let searchInput = $('#search');
 
@@ -73,7 +75,7 @@
                 e.stopPropagation();
             });
         });
-        </script>
-        <h1><%= title %></h1>
-    </body>
+    </script>
+    <h1><%= title %></h1>
+</body>
 </html>
