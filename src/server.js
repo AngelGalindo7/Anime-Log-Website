@@ -46,6 +46,11 @@ app.get('/list', (req, res) => {
     res.render('index', { title: 'IM AT THE LIST PAGE' });
 });
 
+app.get('/login', (reg, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'))
+    //res.render('index', {title: 'IM AT THE LOGIN PAGE'});
+});
+
 // Handle /recommendation route
 // app.get('/api/recommendation', (req, res) => {
 //     console.log('Received request for /recommendation');
@@ -69,6 +74,7 @@ app.get('/test', (req, res) => {
     console.log('Received request for /test');
     res.send('Test route is working!');
 });
+
 
 
 app.get('/create-account', (req, res) => {
