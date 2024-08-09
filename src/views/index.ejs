@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -35,51 +36,80 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
-            let resultsDiv = $('#search-results');
-            let searchInput = $('#search');
+    document.addEventListener('DOMContentLoaded', function() {
+        const resultsDiv = document.getElementById('search-results');
+        const searchInput = document.getElementById('search');
+        // console.log("test");
+        searchInput.addEventListener('input', function() {
+            const query = this.value;
+            if (query.length > 0) {
+                fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ search: query })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resultsDiv.innerHTML = ''; // Clear previous results
+                    if (data.results.length > 0) {
+                        resultsDiv.style.display = 'block';
+                        data.results.forEach(function(result) {
+                            // Create a container for the result item
+                            const resultItem = document.createElement('div');
+                            resultItem.className = 'result-item';
 
-            searchInput.on('input', function() {
-                let query = $(this).val();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: '/search',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ search: query }),
-                        success: function(response) {
-                            resultsDiv.empty();
-                            if (response.results.length > 0) {
-                                resultsDiv.show();
-                                response.results.forEach(function(result) {
-                                    resultsDiv.append('<div class="result-item">' + result.name + '</div>');
-                                });
-                            } else {
-                                resultsDiv.hide();
-                            }
-                        }
-                    });
-                } else {
-                    resultsDiv.empty().hide();
-                }
-            });
+                            // Add the result name
+                            const nameSpan = document.createElement('span');
+                            nameSpan.textContent = result.name;
+                            resultItem.appendChild(nameSpan);
 
-            $(document).on('click', function(event) {
-                if (!$(event.target).closest('.search-bar').length) {
-                    resultsDiv.hide();
-                }
-            });
+                            // Create the button
+                            const actionButton = document.createElement('button');
+                            actionButton.classList.add('list-add');
+                            actionButton.innerHTML = '<span class="material-symbols-outlined">favorite</span>';
+                            // actionButton.style.display = 'inline-block';
+                            actionButton.addEventListener('click', function() {
+                                console.log('Button clicked for ID:', result.anime_id); // debug
+                            });
 
-            searchInput.on('focus', function() {
-                if (resultsDiv.children().length > 0) {
-                    resultsDiv.show();
-                }
-            });
+                            // Add the button next to the name
+                            resultItem.appendChild(actionButton);
 
-            resultsDiv.on('mousedown', function(e) {
-                e.stopPropagation();
-            });
+                            // Append the result item to the resultsDiv
+                            resultsDiv.appendChild(resultItem);
+                        });
+                    } else {
+                        resultsDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                resultsDiv.innerHTML = ''; // Clear results
+                resultsDiv.style.display = 'none';
+            }
         });
+    
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.search-bar')) {
+                resultsDiv.style.display = 'none';
+            }
+        });
+    
+        searchInput.addEventListener('focus', function() {
+            if (resultsDiv.children.length > 0) {
+                resultsDiv.style.display = 'block';
+            }
+        });
+    
+        resultsDiv.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+        });
+    });
+    
     </script>
 </body>
 </html>

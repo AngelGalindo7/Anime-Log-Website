@@ -46,7 +46,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get('/', (req, res) => {
-    res.render('index', { loggedIn: req.session.loggedIn, username: req.session.username });
+    res.render('index', { loggedIn: req.session.loggedIn, username: req.session.username, user_id:req.session.id });
+
 });
 
 app.get('/recommendation', (req, res) => {
@@ -125,9 +126,11 @@ app.post('/login', (req, res) => {
             }
 
             req.session.loggedIn = true; 
+            req.session.user_id = login_results[0].id;
             req.session.username = login_results[0].username;
             res.redirect('/');
         })
+
 })
 
         
@@ -181,7 +184,7 @@ app.post('/create-account', (req, res) => {
 app.post('/search', (req, res) => {
     const searchQuery = req.body.search;
 
-    const query = 'SELECT name FROM anime_filtered WHERE name LIKE ? OR English_name LIKE ? ORDER BY Popularity ASC LIMIT 5';
+    const query = 'SELECT name, anime_id FROM anime_filtered WHERE name LIKE ? OR English_name LIKE ? ORDER BY Popularity ASC LIMIT 5';
     const formattedQuery = mysql.format(query, [`%${searchQuery}%`, `%${searchQuery}%`]);
 
     db.query(formattedQuery, (err, results) => {

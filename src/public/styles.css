@@ -16,7 +16,8 @@ body {
     margin: 0;
     justify-content: space-between;
 }
-.navigation-container button {
+
+.navigation-links button {
     margin: 0px;
     padding: 10px 20px;
     font-size: 20px;
@@ -78,10 +79,12 @@ body {
 .result-item {
     padding: 10px;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
 }
 
 .result-item:hover {
-    background-color: #f1f1f1;
+    background-color: #f1f1f193;
 }
 
 .profile-image {
@@ -164,3 +167,22 @@ h1 {
     color: #ffffff;
 }
 
+.search-bar .list-add:hover {
+    color: #b3001b; /* Darker blue on hover */
+    cursor: pointer;
+}
+
+.search-bar .list-add {
+    color: white;
+    background-color: transparent;
+    border: none;
+}
+
+.material-symbols-outlined {
+    background-color: transparent;
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 500;
+}
