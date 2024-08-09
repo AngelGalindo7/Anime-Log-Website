@@ -39,12 +39,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files (e.g., index.html)
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get('/', (req, res) => {
-    res.render('index', { loggedIn: req.session.loggedIn });
+    res.render('index', { loggedIn: req.session.loggedIn, username: req.session.username });
 });
 
 app.get('/recommendation', (req, res) => {
@@ -62,7 +64,6 @@ app.get('/list', (req, res) => {
 
 app.get('/login', (reg, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'))
-    //res.render('index', {title: 'IM AT THE LOGIN PAGE'});
 });
 
 // Handle /recommendation route
@@ -122,10 +123,10 @@ app.post('/login', (req, res) => {
                 // Password doesn't match
                 return res.status(400).send('Incorrect Password!');
             }
-            res.status(200).send("Return to Main Page GOODJOBB");
-            //TODO: If logged in, loggedIn variable is set to true
-            req.session.loggedIn = true; // Set session variable
-            //res.redirect('/');
+
+            req.session.loggedIn = true; 
+            req.session.username = login_results[0].username;
+            res.redirect('/');
         })
 })
 

@@ -4,19 +4,24 @@
     <title>Anime Logger</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="head-container">
         <h1>Anime Logger</h1>
-        <% if (!loggedIn) { %>
-            <div class="auth-buttons">
+        <div class="auth-buttons">
+            <% if (loggedIn) { %>
+                <a href="/profile">
+                    <span class="username"><%= username %></span>
+                    <img src="/default-avatar.jpg" alt="Profile" class="profile-image">
+                </a>
+            <% } else { %>
                 <a href="/login"> <button type="button">Login</button> </a>
                 <a href="/create-account"> <button type="button">Create Account</button> </a>
-            </div>
-        <% } %>
-    </div> <!-- Fixed extra closing div here -->
+            <% } %>
+        </div>
+    </div>
     <div class="navigation-container">
         <div class="navigation-links">
             <a href="/list"> <button type="button">List</button> </a>
@@ -76,6 +81,5 @@
             });
         });
     </script>
-    <h1><%= title %></h1>
 </body>
 </html>

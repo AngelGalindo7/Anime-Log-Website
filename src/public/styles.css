@@ -83,6 +83,17 @@ body {
 .result-item:hover {
     background-color: #f1f1f1;
 }
+
+.profile-image {
+    width: 50px; /* Adjust size as needed */
+    height: auto;
+    border-radius: 50%; /* Optional: makes the image circular */
+}
+
+.username {
+    color:rgb(221, 140, 34)
+}
+
 /* General styles for the body */
 #account-page-body {
     font-family: Arial, sans-serif;
