@@ -47,7 +47,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.render('index', { loggedIn: req.session.loggedIn, username: req.session.username, user_id:req.session.id });
-
 });
 
 app.get('/recommendation', (req, res) => {
@@ -198,6 +197,26 @@ app.post('/search', (req, res) => {
     });
 });
 
+// adding to list (favoriting the anime)
+app.post('/favorite', (req, res) => {
+    const anime_id = req.body.anime_id;
+    const user_id = req.session.user_id;
+    console.log(user_id);
+
+    const query = 'INSERT INTO favorites (uuid, anime_id) VALUES (? , ?)';
+    const formattedQuery = mysql.format(query, [`${user_id}`, `${anime_id}`]);
+
+    db.query(formattedQuery, (err, result) => {
+        if (err) {
+            console.error('Error inserting into id:', err);
+            return res.status(500).send('Error adding favorite');
+        }
+
+        console.log('Anime added to favorites:', result);
+        res.status(200).send('Anime favorited successfully!');
+    });
+});
+
 // Handle all other routes
 app.use((req, res) => {
     res.status(404).send('404 - Not Found');
@@ -207,3 +226,4 @@ app.use((req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
+
