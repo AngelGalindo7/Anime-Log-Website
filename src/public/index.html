@@ -6,22 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script  src="/index.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <!-- <script  src="/index.js"></script> -->
 </head>
 <body>
     <div class="head-container">
         <h1>Anime Logger</h1>
-        <div class="auth-buttons">
-            <% if (loggedIn) { %>
-                <a href="/profile">
-                    <span class="username"><%= username %></span>
-                    <img src="/default-avatar.jpg" alt="Profile" class="profile-image">
-                </a>
-            <% } else { %>
-                <a href="/login"> <button type="button">Login</button> </a>
-                <a href="/create-account"> <button type="button">Create Account</button> </a>
-            <% } %>
+        <div class="auth-buttons" id="auth-buttons-container">
         </div>
     </div>
     <div class="navigation-container">
@@ -36,8 +26,6 @@
             <div id="search-results"></div>
         </div>
     </div>
-    <!-- <script>
-
-    </script> -->
+    <script src="/index.js"></script>
 </body>
 </html>

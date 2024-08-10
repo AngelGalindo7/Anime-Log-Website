@@ -34,8 +34,8 @@ app.use(session({
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files (e.g., index.html)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -50,40 +50,23 @@ app.get('/', (req, res) => {
 });
 
 app.get('/recommendation', (req, res) => {
-    //res.sendFile(path.join(__dirname, 'public', 'recommendation.html'));
-    res.render('index', { title: 'IM AT THE RECOMMENDATION PAGE' });
+    res.sendFile(path.join(__dirname, 'public', 'recommendation.html'));
+    //res.render('index', { title: 'IM AT THE RECOMMENDATION PAGE' });
 });
 
 app.get('/about', (req, res) => {
-    res.render('index', { title: 'IM AT THE ABOUT PAGE' });
+    res.sendFile(path.join(__dirname, 'public', 'about.html'));
+    //res.render('index', { title: 'IM AT THE ABOUT PAGE' });
 });
 
 app.get('/list', (req, res) => {
-    res.render('index', { title: 'IM AT THE LIST PAGE' });
+    res.sendFile(path.join(__dirname, 'public', 'list.html'));
+    //res.render('index', { title: 'IM AT THE LIST PAGE' });
 });
 
 app.get('/login', (reg, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'))
 });
-
-// Handle /recommendation route
-// app.get('/api/recommendation', (req, res) => {
-//     console.log('Received request for /recommendation');
-//     const queryString = `SELECT name FROM anime_filtered ORDER BY Popularity LIMIT 20`;
-
-//     db.query(queryString, (err, results) => {
-//         if (err) {
-//             console.error('Error executing query:', err);
-//             res.status(500).send('500 - Internal Server Error');
-//             return;
-//         }
-
-//         // Print results to the terminal
-//         console.log('Query Results:', results);
-
-//         res.json(results);
-//     });
-// });
 
 app.get('/test', (req, res) => {
     console.log('Received request for /test');
@@ -129,10 +112,25 @@ app.post('/login', (req, res) => {
             req.session.username = login_results[0].username;
             res.redirect('/');
         })
+    })      
+});
 
-})
+app.get('/check-auth', (req, res) => {
+    res.json({
+        loggedIn: req.session.loggedIn || false,
+        username: req.session.username || ''
+    });
+});
 
-        
+
+app.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        res.redirect('/'); // Redirect to the main page
+    });
 });
 
 
