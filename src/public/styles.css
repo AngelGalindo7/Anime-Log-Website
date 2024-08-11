@@ -94,7 +94,52 @@ body {
     border-radius: 50%; /* Optional: makes the image circular */
 }
 
+.auth-buttons{
+    display: flex;
+    align-items: baseline;
+    gap: 10px; 
+}
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-image {
+    cursor: pointer;
+    width: 50px; /* Adjust the size as needed */
+    height: 50px;
+    border-radius: 50%;
+}
+
+.dropdown-menu {
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 110%; /* Align the dropdown below the image */
+    right: 0;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dropdown-menu button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+    background-color: #f1f1f1; /* Highlight on hover */
+}
+
 .username {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
     color:rgb(221, 140, 34)
 }
 

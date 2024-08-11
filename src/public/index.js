@@ -18,16 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.results.length > 0) {
                     resultsDiv.style.display = 'block';
                     data.results.forEach(function(result) {
-                        // Create a container for the result item
                         const resultItem = document.createElement('div');
                         resultItem.className = 'result-item';
     
-                        // Add the result name
                         const nameSpan = document.createElement('span');
                         nameSpan.textContent = result.name;
                         resultItem.appendChild(nameSpan);
     
-                        // Create the button
                         const actionButton = document.createElement('button');
                         actionButton.title ="Add To Favorites";
                         actionButton.classList.add('list-add');
@@ -82,14 +79,29 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.loggedIn) {
                 authButtonsContainer.innerHTML = `
-                    <button type="button" id="logout-button">Logout</button>
-                    <a href="/profile">
-                        <span class="username">${data.username}</span>
-                        <img src="/default-avatar.jpg" alt="Profile" class="profile-image">
-                    </a>
+                    <span class="username">${data.username}</span>
+                    <div class="profile-container">
+                        <img src="/default-avatar.jpg" alt="Profile" class="profile-image" id="profileImage">
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <button id="logoutButton">Logout</button>
+                        </div>
+                    </div>
                 `;
 
-                document.getElementById('logout-button').addEventListener('click', function() {
+                const profileImage = document.getElementById('profileImage');
+                const dropdownMenu = document.getElementById('dropdownMenu');
+
+                profileImage.addEventListener('click', function() {
+                    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (!event.target.closest('.profile-container')) {
+                        dropdownMenu.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('logoutButton').addEventListener('click', function() {
                     fetch('/logout', {
                         method: 'POST',
                         headers: {
