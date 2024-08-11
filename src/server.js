@@ -59,10 +59,63 @@ app.get('/about', (req, res) => {
     //res.render('index', { title: 'IM AT THE ABOUT PAGE' });
 });
 
+app.get('/fetch-list-data', (req, res) => {
+    console.log("Fetching list data...");
+    if (!req.session.loggedIn) {
+        console.log("Not logged in, redirecting to login...");
+        req.session.listhi = true;
+        return res.redirect('/login');
+    }
+
+    const user_id = req.session.user_id;
+    const query = 'SELECT anime_id FROM favorites WHERE uuid = ?';
+    const formattedQuery = mysql.format(query, [user_id]);
+
+    db.query(formattedQuery, (err, results) => {
+        if (err) {
+            console.error('Error fetching favorite list data:', err);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        // Extract anime_id values
+        const animeIds = results.map(row => row.anime_id);
+        if (animeIds.length === 0) {
+            req.session.listData = [];
+            console.log('No favorite anime found.');
+            return res.redirect('/list');
+        }
+
+        // Query to fetch names based on anime_id
+        const nameQuery = 'SELECT anime_id, name FROM anime_filtered WHERE anime_id IN (?)';
+        const formattedNameQuery = mysql.format(nameQuery, [animeIds]);
+
+        db.query(formattedNameQuery, (err, nameResults) => {
+            if (err) {
+                console.error('Error fetching anime names:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            // Store the list of names in session
+            req.session.listData = nameResults;
+            res.redirect('/list');
+        });
+    });
+});
+
 app.get('/list', (req, res) => {
+    console.log("PRINT");
     res.sendFile(path.join(__dirname, 'public', 'list.html'));
     //res.render('index', { title: 'IM AT THE LIST PAGE' });
 });
+
+app.get('/get-list-data', (req, res) => {
+    console.log("HEY");
+    // Retrieve data from session
+    const listData = req.session.listData || [];
+    console.log(req.session.listData);
+    // Send data as JSON
+    res.json(req.session.listData || []);
+})
 
 app.get('/login', (reg, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'))
@@ -114,7 +167,15 @@ app.post('/login', (req, res) => {
             req.session.loggedIn = true; 
             req.session.user_id = login_results[0].id;
             req.session.username = login_results[0].username;
+
+            if(req.session.listhi === true){
+                console.log
+                req.session.listhi = false;
+                res.redirect('/fetch-list-data');
+            }
+            else{
             res.redirect('/');
+            }
         })
     })      
 });
