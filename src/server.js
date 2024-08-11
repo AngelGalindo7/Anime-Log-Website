@@ -66,12 +66,16 @@ app.get('/list', (req, res) => {
 
 app.get('/login', (reg, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'))
-});
+}); 
 
 app.get('/test', (req, res) => {
     console.log('Received request for /test');
     res.send('Test route is working!');
 });
+
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+})
 
 
 app.post('/login', (req, res) => {

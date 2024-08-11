@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="profile-container">
                         <img src="/default-avatar.jpg" alt="Profile" class="profile-image" id="profileImage">
                         <div class="dropdown-menu" id="dropdownMenu">
+                            <a href="/profile"><button id="profileButton">Profile</button></a>
                             <button id="logoutButton">Logout</button>
                         </div>
                     </div>
