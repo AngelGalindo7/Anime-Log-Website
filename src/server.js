@@ -85,20 +85,21 @@ app.get('/fetch-list-data', (req, res) => {
             return res.redirect('/list');
         }
 
-        // Query to fetch names based on anime_id
-        const nameQuery = 'SELECT anime_id, name FROM anime_filtered WHERE anime_id IN (?)';
-        const formattedNameQuery = mysql.format(nameQuery, [animeIds]);
+        // Query to fetch names and sypnopsis based on anime_id
+        const dataQuery = 'SELECT anime_id, name, sypnopsis FROM anime_filtered WHERE anime_id IN (?)';
+        const formattedDataQuery = mysql.format(dataQuery, [animeIds]);
 
-        db.query(formattedNameQuery, (err, nameResults) => {
+        db.query(formattedDataQuery, (err, DataResults) => {
             if (err) {
                 console.error('Error fetching anime names:', err);
                 return res.status(500).send('Internal Server Error');
             }
 
             // Store the list of names in session
-            req.session.listData = nameResults;
+            req.session.listData = DataResults;
             res.redirect('/list');
         });
+
     });
 });
 

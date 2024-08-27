@@ -19,3 +19,29 @@ th {
     border: none;
     cursor: pointer;
 }
+.synopsis-container {
+    position: relative; /* Allows for absolute positioning of child elements */
+    max-width: 300px; /* Adjust as needed */
+    max-height: 100px; /* Adjust as needed */
+    overflow: hidden; /* Hide text overflow */
+    padding: 10px;
+    border: 1px solid #ddd; /* Optional: Add border */
+    background-color: #f9f9f9; /* Optional: Add background color */
+}
+
+.more-button {
+    position: absolute; /* Absolute positioning within the container */
+    bottom: 10px; /* Position from the bottom */
+    right: 10px; /* Position from the right */
+    padding: 5px 10px;
+    color: #007bff; /* Button text color */
+    cursor: pointer;
+    font-size: 14px;
+    background: #fff; /* Button background color */
+    border: 1px solid #ddd; /* Optional: Button border */
+    border-radius: 4px; /* Optional: Button border radius */
+}
+
+.more-button:hover {
+    text-decoration: underline;
+}

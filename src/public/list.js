@@ -21,28 +21,60 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             console.log('Session Data:', data);
-            // Get the table body element
             const tableBody = document.querySelector("#List-table tbody");
 
-            // Iterate over data to create rows
             data.forEach(item => {
                 const row = document.createElement('tr');
 
-                // Create and append cells for the row
+                // Rating cell
+                const imageCell = document.createElement('td');
+                imageCell.textContent = 'Image placeholder';
+                row.appendChild(imageCell);
+
+                // Name cell
                 const nameCell = document.createElement('td');
-                nameCell.textContent = item.name; // Assuming item.name contains the anime name
+                nameCell.textContent = item.name || 'No Name Available';
                 row.appendChild(nameCell);
 
-                // Placeholder cells for description and rating
+                // Description cell
                 const descriptionCell = document.createElement('td');
-                descriptionCell.textContent = 'Description placeholder';
+                const synopsisContainer = document.createElement('div');
+                synopsisContainer.className = 'synopsis-container'; // Correct class name
+
+                const maxLength = 100;
+                const fullSynopsis = item.sypnopsis || 'No Synopsis Available';
+                const truncatedSynopsis = fullSynopsis.length > maxLength
+                    ? fullSynopsis.substring(0, maxLength) + '...'
+                    : fullSynopsis;
+
+                synopsisContainer.textContent = truncatedSynopsis;
+
+                const moreButton = document.createElement('span');
+                moreButton.className = 'more-button';
+                moreButton.textContent = fullSynopsis.length > maxLength ? 'More' : '';
+
+                moreButton.addEventListener('click', () => {
+                    if (synopsisContainer.textContent === truncatedSynopsis) {
+                        synopsisContainer.textContent = fullSynopsis;
+                        moreButton.textContent = 'Less';
+                    } else {
+                        synopsisContainer.textContent = truncatedSynopsis;
+                        moreButton.textContent = 'More';
+                    }
+                });
+
+                descriptionCell.appendChild(synopsisContainer);
+                if (fullSynopsis.length > maxLength) {
+                    descriptionCell.appendChild(moreButton);
+                }
+
                 row.appendChild(descriptionCell);
 
+                // Rating cell
                 const ratingCell = document.createElement('td');
                 ratingCell.textContent = 'Rating placeholder';
                 row.appendChild(ratingCell);
 
-                // Append the new row to the table body
                 tableBody.appendChild(row);
             });
         })
