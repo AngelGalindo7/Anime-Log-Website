@@ -1,6 +1,9 @@
 body {
     background-color: rgb(43, 39, 39);
 }
+p {
+    color: whitesmoke;
+}
 .head-container {
     display: flex;
     justify-content: space-between;
