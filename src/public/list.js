@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(item => {
                 const row = document.createElement('tr');
 
+                // Rating cell
+                const imageCell = document.createElement('td');
+                imageCell.textContent = 'Image placeholder';
+                row.appendChild(imageCell);
+
                 // Name cell
                 const nameCell = document.createElement('td');
                 nameCell.textContent = item.name || 'No Name Available';
