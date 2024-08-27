@@ -245,18 +245,40 @@ app.post('/create-account', (req, res) => {
 
 app.post('/search', (req, res) => {
     const searchQuery = req.body.search;
+    const user_id = req.session.user_id;
 
-    const query = 'SELECT name, anime_id FROM anime_filtered WHERE name LIKE ? OR English_name LIKE ? ORDER BY Popularity ASC LIMIT 5';
-    const formattedQuery = mysql.format(query, [`%${searchQuery}%`, `%${searchQuery}%`]);
+    const searchQueryText = 'SELECT name, anime_id FROM anime_filtered WHERE name LIKE ? OR English_name LIKE ? ORDER BY Popularity ASC LIMIT 5';
+    const searchQueryFormatted = mysql.format(searchQueryText, [`%${searchQuery}%`, `%${searchQuery}%`]);
 
-    db.query(formattedQuery, (err, results) => {
+    db.query(searchQueryFormatted, (err, results) => {
         if (err) {
-            console.error('Error executing query:', err);
-            res.status(500).send('500 - Internal Server Error');
-            return;
+            console.error('Error executing search query:', err);
+            return res.status(500).send('500 - Internal Server Error');
         }
 
-        res.json({results});
+        if (results.length > 0) {
+            const animeIds = results.map(anime => anime.anime_id);
+            const favoritesQueryText = 'SELECT anime_id FROM favorites WHERE uuid = ? AND anime_id IN (?)';
+            const favoritesQueryFormatted = mysql.format(favoritesQueryText, [user_id, animeIds]);
+
+            db.query(favoritesQueryFormatted, (favErr, favoriteResults) => {
+                if (favErr) {
+                    console.error('Error checking favorites:', favErr);
+                    return res.status(500).send('500 - Internal Server Error');
+                }
+
+                const favoriteAnimeIds = new Set(favoriteResults.map(fav => fav.anime_id));
+
+                const enrichedResults = results.map(anime => ({
+                    ...anime,
+                    isFavorited: favoriteAnimeIds.has(anime.anime_id)
+                }));
+
+                res.json({ results: enrichedResults });
+            });
+        } else {
+            res.json({ results: [] });
+        }
     });
 });
 
@@ -264,19 +286,43 @@ app.post('/search', (req, res) => {
 app.post('/favorite', (req, res) => {
     const anime_id = req.body.anime_id;
     const user_id = req.session.user_id;
-    console.log(user_id);
 
-    const query = 'INSERT INTO favorites (uuid, anime_id) VALUES (? , ?)';
-    const formattedQuery = mysql.format(query, [`${user_id}`, `${anime_id}`]);
+    const checkFavoriteQuery = 'SELECT * FROM favorites WHERE uuid = ? AND anime_id = ?';
+    const checkFavoriteFormatted = mysql.format(checkFavoriteQuery, [user_id, anime_id]);
 
-    db.query(formattedQuery, (err, result) => {
+    db.query(checkFavoriteFormatted, (err, results) => {
         if (err) {
-            console.error('Error inserting into id:', err);
-            return res.status(500).send('Error adding favorite');
+            console.error('Error checking favorite:', err);
+            return res.status(500).send('500 - Internal Server Error');
         }
 
-        console.log('Anime added to favorites:', result);
-        res.status(200).send('Anime favorited successfully!');
+        if (results.length > 0) {
+            // If already favorited, unfavorite it
+            const deleteFavoriteQuery = 'DELETE FROM favorites WHERE uuid = ? AND anime_id = ?';
+            const deleteFavoriteFormatted = mysql.format(deleteFavoriteQuery, [user_id, anime_id]);
+
+            db.query(deleteFavoriteFormatted, (deleteErr, deleteResult) => {
+                if (deleteErr) {
+                    console.error('Error deleting favorite:', deleteErr);
+                    return res.status(500).send('500 - Internal Server Error');
+                }
+
+                res.status(200).send({ message: 'Anime unfavorited successfully!', action: 'unfavorited' });
+            });
+        } else {
+            // If not favorited, favorite it
+            const insertFavoriteQuery = 'INSERT INTO favorites (uuid, anime_id) VALUES (?, ?)';
+            const insertFavoriteFormatted = mysql.format(insertFavoriteQuery, [user_id, anime_id]);
+
+            db.query(insertFavoriteFormatted, (insertErr, insertResult) => {
+                if (insertErr) {
+                    console.error('Error adding favorite:', insertErr);
+                    return res.status(500).send('500 - Internal Server Error');
+                }
+
+                res.status(200).send({ message: 'Anime favorited successfully!', action: 'favorited' });
+            });
+        }
     });
 });
 

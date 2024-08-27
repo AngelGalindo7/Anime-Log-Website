@@ -20,15 +20,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.results.forEach(function(result) {
                         const resultItem = document.createElement('div');
                         resultItem.className = 'result-item';
-    
+            
                         const nameSpan = document.createElement('span');
                         nameSpan.textContent = result.name;
                         resultItem.appendChild(nameSpan);
-    
+            
                         const actionButton = document.createElement('button');
-                        actionButton.title ="Add To Favorites";
+                        actionButton.title = result.isFavorited ? "Remove from Favorites" : "Add to Favorites";
                         actionButton.classList.add('list-add');
-                        actionButton.innerHTML = '<span class="material-symbols-outlined">favorite</span>';
+                        actionButton.innerHTML = `<span class="material-symbols-outlined" style="color: ${result.isFavorited ? 'red' : 'white'};">favorite</span>`;
                         actionButton.addEventListener('click', function() {
                             fetch('/favorite', {
                                 method: 'POST',
@@ -36,22 +36,25 @@ document.addEventListener('DOMContentLoaded', function() {
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({ anime_id: result.anime_id })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.action === 'favorited') {
+                                    actionButton.innerHTML = '<span class="material-symbols-outlined" style="color: red;">favorite</span>';
+                                } else if (data.action === 'unfavorited') {
+                                    actionButton.innerHTML = '<span class="material-symbols-outlined" style="color: white;">favorite</span>';
+                                }
                             });
                         });
-    
+            
                         resultItem.appendChild(actionButton);    
                         resultsDiv.appendChild(resultItem);
                     });
                 } else {
                     resultsDiv.style.display = 'none';
                 }
+
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        } else {
-            resultsDiv.innerHTML = ''; // Clear results
-            resultsDiv.style.display = 'none';
         }
     });
 

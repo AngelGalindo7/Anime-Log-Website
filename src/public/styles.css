@@ -213,15 +213,20 @@ h1 {
     color:rgb(221, 140, 34);
 }
 
-.search-bar .list-add:hover {
-    color: #b3001b; /* Darker blue on hover */
-    cursor: pointer;
-}
-
 .search-bar .list-add {
     color: white;
     background-color: transparent;
     border: none;
+    cursor: pointer;
+}
+
+.search-bar .list-add:hover {
+    color: #ce4d60; 
+    cursor: pointer;
+}
+
+.search-bar .list-add.favorited span {
+    color: red; /* Make the heart red when favorited */
 }
 
 .material-symbols-outlined {
