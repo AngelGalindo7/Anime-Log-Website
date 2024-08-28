@@ -20,13 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/get-list-data')
         .then(response => response.json())
         .then(data => {
-            console.log('Session Data:', data);
             const tableBody = document.querySelector("#List-table tbody");
 
             data.forEach(item => {
                 const row = document.createElement('tr');
 
-                // Rating cell
+                // Image cell
                 const imageCell = document.createElement('td');
                 imageCell.textContent = 'Image placeholder';
                 row.appendChild(imageCell);
@@ -54,19 +53,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 moreButton.textContent = fullSynopsis.length > maxLength ? 'More' : '';
 
                 moreButton.addEventListener('click', () => {
-                    if (synopsisContainer.textContent === truncatedSynopsis) {
-                        synopsisContainer.textContent = fullSynopsis;
-                        moreButton.textContent = 'Less';
-                    } else {
+                    if (synopsisContainer.classList.contains('expanded')) {
+                        synopsisContainer.classList.remove('expanded');
                         synopsisContainer.textContent = truncatedSynopsis;
                         moreButton.textContent = 'More';
+                    } else {
+                        synopsisContainer.classList.add('expanded');
+                        synopsisContainer.textContent = fullSynopsis;
+                        moreButton.textContent = 'Less';
                     }
                 });
 
+                synopsisContainer.appendChild(moreButton); // Append button to synopsisContainer
                 descriptionCell.appendChild(synopsisContainer);
-                if (fullSynopsis.length > maxLength) {
-                    descriptionCell.appendChild(moreButton);
-                }
 
                 row.appendChild(descriptionCell);
 

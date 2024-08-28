@@ -2,15 +2,18 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
+
 th, td {
     border: 1px solid #ddd;
-    padding: 32px;
+    padding: 16px;
     text-align: left;
 }
+
 th {
     background-color: #f2f2f2;
     text-align: center;
 }
+
 .add-row-btn {
     margin-top: 10px;
     padding: 5px 10px;
@@ -20,26 +23,31 @@ th {
     cursor: pointer;
 }
 .synopsis-container {
-    position: relative; /* Allows for absolute positioning of child elements */
-    max-width: 300px; /* Adjust as needed */
-    max-height: 100px; /* Adjust as needed */
-    overflow: hidden; /* Hide text overflow */
+    position: relative;
+    max-width: 300px;
+    max-height: 100px; /* Initial height */
+    overflow: hidden;
     padding: 10px;
-    border: 1px solid #ddd; /* Optional: Add border */
-    background-color: #f9f9f9; /* Optional: Add background color */
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    transition: max-height 0.3s ease; /* Smooth transition */
+}
+
+.synopsis-container.expanded {
+    max-height: none; /* Remove height limit when expanded */
 }
 
 .more-button {
-    position: absolute; /* Absolute positioning within the container */
-    bottom: 10px; /* Position from the bottom */
-    right: 10px; /* Position from the right */
+    position: absolute;
+    bottom: 10px;
+    right: 10px; /* Position button inside container */
     padding: 5px 10px;
-    color: #007bff; /* Button text color */
+    color: #007bff;
     cursor: pointer;
     font-size: 14px;
-    background: #fff; /* Button background color */
-    border: 1px solid #ddd; /* Optional: Button border */
-    border-radius: 4px; /* Optional: Button border radius */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 .more-button:hover {
