@@ -71,8 +71,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.appendChild(descriptionCell);
 
                 // Rating cell
+                // Create a dropdown menu for the rating column
+                const anime_id = item.anime_id;
                 const ratingCell = document.createElement('td');
-                ratingCell.textContent = 'Rating placeholder';
+
+                const select = document.createElement('select');
+
+                const defaultOption = document.createElement('option');
+                defaultOption.textContent = '--';
+                defaultOption.value = '';
+                select.appendChild(defaultOption);
+
+                for (let i = 1; i <= 10; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+
+                // Retrieve and set the user's saved rating
+                fetch(`/get-rating?anime_id=${anime_id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.rating) {
+                            select.value = data.rating;
+                        }
+                    });
+
+                select.addEventListener('change', function() {
+                    const selectedRating = this.value;
+
+                    fetch('/save-rating', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            anime_id: anime_id,
+                            rating: selectedRating
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Rating saved successfully');
+                        } else {
+                            console.error('Failed to save rating');
+                        }
+                    });
+                });
+
+                ratingCell.appendChild(select);
                 row.appendChild(ratingCell);
 
                 tableBody.appendChild(row);

@@ -46,7 +46,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get('/', (req, res) => {
-    res.render('index', { loggedIn: req.session.loggedIn, username: req.session.username, user_id:req.session.id });
+    res.render('index', { loggedIn: req.session.loggedIn, username: req.session.username, user_id: req.session.user_id });
 });
 
 app.get('/recommendation', (req, res) => {
@@ -118,6 +118,48 @@ app.get('/get-list-data', (req, res) => {
     res.json(req.session.listData || []);
 })
 
+app.get('/get-rating', (req, res) => {
+    console.log('are we in get-rating?')
+    const anime_id = req.query.anime_id;
+    const user_id = req.session.user_id;
+
+    const query = 'SELECT rating FROM favorites WHERE uuid = ? AND anime_id = ?';
+    const formattedQuery = mysql.format(query, [user_id, anime_id]);
+
+    db.query(formattedQuery, (err, results) => {
+        if (err) {
+            console.error('Error retrieving rating:', err);
+            return res.status(500).send('Error retrieving rating');
+        }
+
+        res.json({ rating: results.length > 0 ? results[0].rating : null });
+    });
+});
+
+
+app.post('/save-rating', (req, res) => {
+    console.log('are we in save-rating?')
+    const { anime_id, rating } = req.body;
+    const user_id = req.session.user_id;
+
+    const query = `
+        INSERT INTO favorites (uuid, anime_id, rating)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE rating = ?;
+    `;
+    const formattedQuery = mysql.format(query, [user_id, anime_id, rating, rating]);
+
+    db.query(formattedQuery, (err, result) => {
+        if (err) {
+            console.error('Error saving rating:', err);
+            return res.status(500).send('Error saving rating');
+        }
+
+        res.status(200).send('Rating saved successfully');
+    });
+});
+
+
 app.get('/login', (reg, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'))
 }); 
@@ -184,7 +226,8 @@ app.post('/login', (req, res) => {
 app.get('/check-auth', (req, res) => {
     res.json({
         loggedIn: req.session.loggedIn || false,
-        username: req.session.username || ''
+        username: req.session.username || '', 
+        user_id: req.session.user_id || 0
     });
 });
 
