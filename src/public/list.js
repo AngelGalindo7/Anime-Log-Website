@@ -25,11 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(item => {
                 const row = document.createElement('tr');
 
-                // Image cell
-                const imageCell = document.createElement('td');
-                imageCell.textContent = 'Image placeholder';
-                row.appendChild(imageCell);
-
                 // Name cell
                 const nameCell = document.createElement('td');
                 nameCell.textContent = item.name || 'No Name Available';
@@ -68,6 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 descriptionCell.appendChild(synopsisContainer);
 
                 row.appendChild(descriptionCell);
+
+                //Genre Cell
+                const genreCell = document.createElement('td');
+                genreCell.textContent = item.genres || 'No Genre Available';
+                row.appendChild(genreCell);
 
                 // Rating cell
                 // Create a dropdown menu for the rating column
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .then(response => {
                         if (response.ok) {
-                            console.log('Rating saved successfully');
+                            //console.log('Rating saved successfully');
                         } else {
                             console.error('Failed to save rating');
                         }

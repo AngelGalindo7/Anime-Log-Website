@@ -60,7 +60,6 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/fetch-list-data', (req, res) => {
-    console.log("Fetching list data...");
     if (!req.session.loggedIn) {
         console.log("Not logged in, redirecting to login...");
         req.session.listhi = true;
@@ -81,12 +80,11 @@ app.get('/fetch-list-data', (req, res) => {
         const animeIds = results.map(row => row.anime_id);
         if (animeIds.length === 0) {
             req.session.listData = [];
-            console.log('No favorite anime found.');
             return res.redirect('/list');
         }
 
         // Query to fetch names and sypnopsis based on anime_id
-        const dataQuery = 'SELECT anime_id, name, sypnopsis FROM anime_filtered WHERE anime_id IN (?)';
+        const dataQuery = 'SELECT anime_id, name, sypnopsis, genres FROM anime_filtered WHERE anime_id IN (?)';
         const formattedDataQuery = mysql.format(dataQuery, [animeIds]);
 
         db.query(formattedDataQuery, (err, DataResults) => {
@@ -104,22 +102,18 @@ app.get('/fetch-list-data', (req, res) => {
 });
 
 app.get('/list', (req, res) => {
-    console.log("PRINT");
     res.sendFile(path.join(__dirname, 'public', 'list.html'));
     //res.render('index', { title: 'IM AT THE LIST PAGE' });
 });
 
 app.get('/get-list-data', (req, res) => {
-    console.log("HEY");
     // Retrieve data from session
     const listData = req.session.listData || [];
-    console.log(req.session.listData);
     // Send data as JSON
     res.json(req.session.listData || []);
 })
 
 app.get('/get-rating', (req, res) => {
-    console.log('are we in get-rating?')
     const anime_id = req.query.anime_id;
     const user_id = req.session.user_id;
 
@@ -138,7 +132,6 @@ app.get('/get-rating', (req, res) => {
 
 
 app.post('/save-rating', (req, res) => {
-    console.log('are we in save-rating?')
     const { anime_id, rating } = req.body;
     const user_id = req.session.user_id;
 
@@ -165,7 +158,6 @@ app.get('/login', (reg, res) => {
 }); 
 
 app.get('/test', (req, res) => {
-    console.log('Received request for /test');
     res.send('Test route is working!');
 });
 
@@ -212,7 +204,6 @@ app.post('/login', (req, res) => {
             req.session.username = login_results[0].username;
 
             if(req.session.listhi === true){
-                console.log
                 req.session.listhi = false;
                 res.redirect('/fetch-list-data');
             }
@@ -280,7 +271,6 @@ app.post('/create-account', (req, res) => {
                 return res.status(500).send('Error creating account');
             }
 
-            console.log('User data inserted successfully:', result);
             res.status(200).send('Account created successfully!');
         });
     });

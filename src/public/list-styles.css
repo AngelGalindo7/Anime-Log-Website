@@ -1,6 +1,16 @@
+body {
+    background-color: rgb(43, 39, 39);
+    color: whitesmoke;
+}
+
+h2 {
+    color: rgb(221, 140, 34);
+}
 table {
     width: 100%;
     border-collapse: collapse;
+    background-color: rgb(73, 68, 68);
+    color: whitesmoke;
 }
 
 th, td {
@@ -10,7 +20,7 @@ th, td {
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: rgb(221, 140, 34);
     text-align: center;
 }
 
@@ -28,8 +38,9 @@ th {
     max-height: 100px; /* Initial height */
     overflow: hidden;
     padding: 10px;
+    color: whitesmoke;
     border: 1px solid #ddd;
-    background-color: #f9f9f9;
+    background-color: rgb(73, 68, 68);
     transition: max-height 0.3s ease; /* Smooth transition */
 }
 
