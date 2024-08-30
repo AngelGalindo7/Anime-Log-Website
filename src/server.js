@@ -5,6 +5,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 // Create an Express application
 const app = express();
@@ -167,10 +170,9 @@ app.get('/profile', (req, res) => {
 
 
 app.post('/login', (req, res) => {
+    const { email, password } = req.body;
 
-    const {email, password} = req.body;
-
-    //Check if emails equal
+    // Check if the email exists
     const email_query = 'SELECT * FROM users WHERE email = ?';
     const formatted_email_Query = mysql.format(email_query, [email]);
 
@@ -180,38 +182,38 @@ app.post('/login', (req, res) => {
             return res.status(500).send('Internal Server Error');
         }
 
-        if (email_results.length != 1) {
-            // User with the same username or email already exists
-            return res.status(400).send('Account does not exist !');
+        if (email_results.length !== 1) {
+            // User with the provided email does not exist
+            return res.status(400).send('Account does not exist!');
         }
 
-        //Check if passwords equal
-        const login_query = 'SELECT * FROM users WHERE email = ? AND password = ?';
-        const formatted_login_Query = mysql.format(login_query, [email, password]);
+        // Retrieve the hashed password from the database
+        const hashedPassword = email_results[0].password;
 
-        db.query(formatted_login_Query, (err, login_results) => {
+        // Compare the provided password with the hashed password
+        bcrypt.compare(password, hashedPassword, (err, isMatch) => {
             if (err) {
                 return res.status(500).send('Internal Server Error');
             }
 
-            if (login_results.length != 1) {
-                // Password doesn't match
+            if (!isMatch) {
+                // Password does not match
                 return res.status(400).send('Incorrect Password!');
             }
 
-            req.session.loggedIn = true; 
-            req.session.user_id = login_results[0].id;
-            req.session.username = login_results[0].username;
+            // Passwords match, log the user in
+            req.session.loggedIn = true;
+            req.session.user_id = email_results[0].id;
+            req.session.username = email_results[0].username;
 
-            if(req.session.listhi === true){
+            if (req.session.listhi === true) {
                 req.session.listhi = false;
                 res.redirect('/fetch-list-data');
+            } else {
+                res.redirect('/');
             }
-            else{
-            res.redirect('/');
-            }
-        })
-    })      
+        });
+    });
 });
 
 app.get('/check-auth', (req, res) => {
@@ -261,17 +263,24 @@ app.post('/create-account', (req, res) => {
             return res.status(400).send('Username or email already exists!');
         }
 
-        // Insert user data into the database
-        const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-        const formattedQuery = mysql.format(query, [username, email, password]);
-
-        db.query(formattedQuery, (err, result) => {
+        // Hash the password before storing it in the database
+        bcrypt.hash(password, saltRounds, (err, hash) => {
             if (err) {
-                console.error('Error inserting user data:', err);
-                return res.status(500).send('Error creating account');
+                console.error('Error hashing password:', err);
+                return res.status(500).send('Internal Server Error');
             }
 
-            res.status(200).send('Account created successfully!');
+            // Insert user data into the database with the hashed password
+            const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+            const formattedQuery = mysql.format(query, [username, email, hash]);
+
+            db.query(formattedQuery, (err, result) => {
+                if (err) {
+                    console.error('Error inserting user data:', err);
+                    return res.status(500).send('Error creating account');
+                }
+                res.redirect('/');
+            });
         });
     });
 });
