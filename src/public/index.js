@@ -135,3 +135,62 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
         });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const prevButton = document.querySelector(".carousel-button.prev");
+    const nextButton = document.querySelector(".carousel-button.next");
+    const carouselImages = document.querySelector(".carousel-images");
+    const totalImages = carouselImages.children.length;
+    const imagesPerSlide = 5; // Number of images to show per slide
+    const imageWidth = 240; // Updated image width
+    const margin = 20; // Space between images
+    const slideWidth = (imageWidth + margin) * imagesPerSlide - margin; // Adjusted slide width
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        carouselImages.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+    }
+
+    prevButton.addEventListener("click", function() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
+    });
+
+    nextButton.addEventListener("click", function() {
+        if (currentIndex < Math.ceil(totalImages / imagesPerSlide) - 1) {
+            currentIndex++;
+            updateCarousel();
+        }
+    });
+});
+document.addEventListener("DOMContentLoaded", function() {
+    const favoriteButtons = document.querySelectorAll('.favorite-button');
+
+    favoriteButtons.forEach(button => {
+        const animeId = button.getAttribute('data-anime-id');
+        button.addEventListener('click', function() {
+            const isFavorited = button.querySelector('span').style.color === 'red';
+
+            fetch('/favorite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ anime_id: animeId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.action === 'favorited') {
+                    button.innerHTML = '<span class="material-symbols-outlined" style="color: red;">favorite</span>';
+                } else if (data.action === 'unfavorited') {
+                    button.innerHTML = '<span class="material-symbols-outlined" style="color: black;">favorite</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
