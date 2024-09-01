@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const resultsDiv = document.getElementById('search-results');
     const searchInput = document.getElementById('search');
-    
+
     searchInput.addEventListener('input', function() {
         const query = this.value;
         if (query.length > 0) {
@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.results.forEach(function(result) {
                         const resultItem = document.createElement('div');
                         resultItem.className = 'result-item';
-            
+                        
                         const nameSpan = document.createElement('span');
                         nameSpan.textContent = result.name;
                         resultItem.appendChild(nameSpan);
-            
+                        
                         const actionButton = document.createElement('button');
                         actionButton.title = result.isFavorited ? "Remove from Favorites" : "Add to Favorites";
                         actionButton.classList.add('list-add');
@@ -46,15 +46,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             });
                         });
-            
+                        
                         resultItem.appendChild(actionButton);    
                         resultsDiv.appendChild(resultItem);
                     });
                 } else {
                     resultsDiv.style.display = 'none';
                 }
-
-            })
+            });
         }
     });
 
@@ -76,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle authentication buttons
     const authButtonsContainer = document.getElementById('auth-buttons-container');
-    
+
     fetch('/check-auth', { method: 'GET' }) // New endpoint to check auth status
         .then(response => response.json())
         .then(data => {
@@ -144,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const imagesPerSlide = 5; // Number of images to show per slide
     const imageWidth = 240; // Updated image width
     const margin = 20; // Space between images
-    const slideWidth = (imageWidth + margin) * imagesPerSlide - margin; // Adjusted slide width
+    const slideWidth = (imageWidth + margin) * imagesPerSlide; // Adjusted slide width
     let currentIndex = 0;
 
     function updateCarousel() {
@@ -154,43 +153,103 @@ document.addEventListener("DOMContentLoaded", function() {
     prevButton.addEventListener("click", function() {
         if (currentIndex > 0) {
             currentIndex--;
-            updateCarousel();
+        } else {
+            currentIndex = Math.ceil(totalImages / imagesPerSlide) - 1; // Move to the last slide
         }
+        updateCarousel();
     });
-
+    
     nextButton.addEventListener("click", function() {
         if (currentIndex < Math.ceil(totalImages / imagesPerSlide) - 1) {
             currentIndex++;
-            updateCarousel();
+        } else {
+            currentIndex = 0; // Move to the first slide
         }
+        updateCarousel();
     });
 });
-document.addEventListener("DOMContentLoaded", function() {
+
+document.addEventListener('DOMContentLoaded', function() {
     const favoriteButtons = document.querySelectorAll('.favorite-button');
 
-    favoriteButtons.forEach(button => {
-        const animeId = button.getAttribute('data-anime-id');
-        button.addEventListener('click', function() {
-            const isFavorited = button.querySelector('span').style.color === 'red';
+    // Fetch favorite status for carousel
+    fetch('/get-favorites', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+            const favoriteAnimeIds = new Set(data.favoriteAnimeIds);
 
-            fetch('/favorite', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ anime_id: animeId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.action === 'favorited') {
-                    button.innerHTML = '<span class="material-symbols-outlined" style="color: red;">favorite</span>';
-                } else if (data.action === 'unfavorited') {
-                    button.innerHTML = '<span class="material-symbols-outlined" style="color: black;">favorite</span>';
+            // Update favorite buttons in the carousel based on fetched data
+            favoriteButtons.forEach(button => {
+                const animeId = button.getAttribute('data-anime-id');
+                const icon = button.querySelector('span');
+                if (favoriteAnimeIds.has(Number(animeId))) {
+                    icon.style.color = 'red';
+                } else {
+                    icon.style.color = 'black';
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
             });
+
+            // Add event listeners to favorite buttons
+            favoriteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const animeId = button.getAttribute('data-anime-id');
+                    const icon = button.querySelector('span');
+                    const isFavorited = icon.style.color === 'red';
+
+                    fetch('/favorite', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ anime_id: animeId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.action === 'favorited') {
+                            icon.style.color = 'red';
+                        } else if (data.action === 'unfavorited') {
+                            icon.style.color = 'black';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login');
+    const errorMessageDiv = document.getElementById('error-message');
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(loginForm);
+        const formDataObj = Object.fromEntries(formData.entries());
+
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataObj)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                errorMessageDiv.textContent = data.error;
+            } else if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMessageDiv.textContent = 'An unexpected error occurred.';
         });
     });
 });

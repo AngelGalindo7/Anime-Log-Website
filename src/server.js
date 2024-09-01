@@ -172,45 +172,39 @@ app.get('/profile', (req, res) => {
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
-    // Check if the email exists
     const email_query = 'SELECT * FROM users WHERE email = ?';
     const formatted_email_Query = mysql.format(email_query, [email]);
 
     db.query(formatted_email_Query, (err, email_results) => {
         if (err) {
             console.error('Error checking for existing email:', err);
-            return res.status(500).send('Internal Server Error');
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
 
         if (email_results.length !== 1) {
-            // User with the provided email does not exist
-            return res.status(400).send('Account does not exist!');
+            return res.status(400).json({ error: 'Account does not exist!' });
         }
 
-        // Retrieve the hashed password from the database
         const hashedPassword = email_results[0].password;
 
-        // Compare the provided password with the hashed password
         bcrypt.compare(password, hashedPassword, (err, isMatch) => {
             if (err) {
-                return res.status(500).send('Internal Server Error');
+                return res.status(500).json({ error: 'Internal Server Error' });
             }
 
             if (!isMatch) {
-                // Password does not match
-                return res.status(400).send('Incorrect Password!');
+                return res.status(400).json({ error: 'Incorrect Password!' });
             }
 
-            // Passwords match, log the user in
             req.session.loggedIn = true;
             req.session.user_id = email_results[0].id;
             req.session.username = email_results[0].username;
 
             if (req.session.listhi === true) {
                 req.session.listhi = false;
-                res.redirect('/fetch-list-data');
+                return res.status(200).json({ redirect: '/fetch-list-data' });
             } else {
-                res.redirect('/');
+                return res.status(200).json({ redirect: '/' });
             }
         });
     });
@@ -366,6 +360,27 @@ app.post('/favorite', (req, res) => {
                 res.status(200).send({ message: 'Anime favorited successfully!', action: 'favorited' });
             });
         }
+    });
+});
+
+app.get('/get-favorites', (req, res) => {
+    // Assuming req.session.userId contains the logged-in user's ID
+    const userId = req.session.user_id; // Adjust as per your session handling
+
+    if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const sql = 'SELECT anime_id FROM favorites WHERE uuid = ?';
+    db.query(sql, [userId], (error, results) => {
+        if (error) {
+            console.error('Database error:', error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        // Extract anime IDs from the query result
+        const favoriteAnimeIds = results.map(row => row.anime_id);
+        res.json({ favoriteAnimeIds });
     });
 });
 

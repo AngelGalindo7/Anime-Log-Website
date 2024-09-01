@@ -1,19 +1,33 @@
 body {
     background-color: rgb(43, 39, 39);
 }
+
 p {
     color: whitesmoke;
     text-align: center;
     margin-top: 30px;
     font-size: 16pt;
 }
+
+.navigation-links a {
+    margin: 0;
+    padding: 0;
+    text-decoration: none; /* Remove underline if necessary */
+}
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
 .head-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 .head-container h1{
-    color: whitesmoke;
+    color: rgb(221, 140, 34);
+    font-size: 32pt;
 }
 
 .navigation-container{
@@ -30,14 +44,22 @@ p {
     background-color: rgb(221, 140, 34);
     color: rgb(245, 245, 245);
 }
-.navigation-container .search-bar input{
-    background-color: whitesmoke;
-}
 
 .search-bar {
     display: flex; /* Align children horizontally */
     align-items: center; /* Vertically center items */
     position: relative; /* Ensure positioning of search results is relative to this container */
+    background-color: rgb(221, 140, 34); /* Background color of the box */
+    padding: 10px; /* Padding around the search bar for spacing */
+    border-radius: 2px; /* Optional: rounded corners */
+    border: 1px solid rgb(221, 140, 34); /* Border color and thickness */
+}
+
+.navigation-container .search-bar input {
+    background-color: whitesmoke;
+    border: none; /* Remove default border for input */
+    padding: 5px; /* Add some padding inside the input */
+    border-radius: 3px; /* Optional: rounded corners for input */
 }
 
 .search-bar input[type="text"] {
@@ -245,10 +267,19 @@ h1 {
 }
 
 .carousel-container {
+    background-color: rgb(158, 154, 154);
     position: relative;
     width: calc((240px * 5) + (20px * 4)); /* Adjust width for 5 larger images + 4 margins */
     overflow: hidden;
     margin: 50px auto; /* Increased margin to lower the carousel on the page */
+    margin-top: 150px;
+    border: 2px solid #ccc; /* Add a border around the container */
+    border-color: rgb(221, 140, 34);
+    border-width: 13px;
+    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 10px;
 }
 
 .carousel-wrapper {
