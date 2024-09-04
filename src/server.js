@@ -64,7 +64,6 @@ app.get('/about', (req, res) => {
 
 app.get('/fetch-list-data', (req, res) => {
     if (!req.session.loggedIn) {
-        console.log("Not logged in, redirecting to login...");
         req.session.listhi = true;
         return res.redirect('/login');
     }
@@ -87,7 +86,7 @@ app.get('/fetch-list-data', (req, res) => {
         }
 
         // Query to fetch names and sypnopsis based on anime_id
-        const dataQuery = 'SELECT anime_id, name, sypnopsis, genres FROM anime_filtered WHERE anime_id IN (?)';
+        const dataQuery = 'SELECT anime_id, name, sypnopsis, Episodes, genres FROM anime_filtered WHERE anime_id IN (?)';
         const formattedDataQuery = mysql.format(dataQuery, [animeIds]);
 
         db.query(formattedDataQuery, (err, DataResults) => {

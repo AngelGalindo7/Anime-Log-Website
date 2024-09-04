@@ -1,128 +1,165 @@
-function addRow() {
-    // Get the table body element
-    const tableBody = document.querySelector("#List-table tbody");
-    
-    // Create a new row element
-    const newRow = document.createElement("tr");
-    
-    // Create and append new cells to the row
-    for (let i = 0; i < 3; i++) {
-        const newCell = document.createElement("td");
-        newCell.textContent = ''; // Leave cell content empty
-        newRow.appendChild(newCell);
-    }
-    
-    // Append the new row to the table body
-    tableBody.appendChild(newRow);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/get-list-data')
         .then(response => response.json())
         .then(data => {
             const tableBody = document.querySelector("#List-table tbody");
+            let sortOrder = 'asc'; // Initial sort order
 
-            data.forEach(item => {
-                const row = document.createElement('tr');
+            // Function to populate table
+            const populateTable = (sortedData) => {
+                tableBody.innerHTML = ''; // Clear existing table rows
 
-                // Name cell
-                const nameCell = document.createElement('td');
-                nameCell.textContent = item.name || 'No Name Available';
-                row.appendChild(nameCell);
+                sortedData.forEach(item => {
+                    const row = document.createElement('tr');
 
-                // Description cell
-                const descriptionCell = document.createElement('td');
-                const synopsisContainer = document.createElement('div');
-                synopsisContainer.className = 'synopsis-container'; // Correct class name
+                    // Name cell
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = item.name || 'No Name Available';
+                    row.appendChild(nameCell);
 
-                const maxLength = 100;
-                const fullSynopsis = item.sypnopsis || 'No Synopsis Available';
-                const truncatedSynopsis = fullSynopsis.length > maxLength
-                    ? fullSynopsis.substring(0, maxLength) + '...'
-                    : fullSynopsis;
+                    // Description cell
+                    const descriptionCell = document.createElement('td');
+                    const synopsisContainer = document.createElement('div');
+                    synopsisContainer.className = 'synopsis-container';
 
-                synopsisContainer.textContent = truncatedSynopsis;
+                    const maxLength = 220;
+                    const fullSynopsis = item.sypnopsis || 'No Synopsis Available';
+                    const truncatedSynopsis = fullSynopsis.length > maxLength
+                        ? fullSynopsis.substring(0, maxLength) + '...'
+                        : fullSynopsis;
 
-                const moreButton = document.createElement('span');
-                moreButton.className = 'more-button';
-                moreButton.textContent = fullSynopsis.length > maxLength ? 'More' : '';
+                    synopsisContainer.textContent = truncatedSynopsis;
 
-                moreButton.addEventListener('click', () => {
-                    if (synopsisContainer.classList.contains('expanded')) {
-                        synopsisContainer.classList.remove('expanded');
-                        synopsisContainer.textContent = truncatedSynopsis;
-                        moreButton.textContent = 'More';
+                    const moreButton = document.createElement('span');
+                    moreButton.className = 'more-button';
+                    moreButton.textContent = fullSynopsis.length > maxLength ? 'More' : '';
+
+                    synopsisContainer.appendChild(document.createTextNode(' '));
+                    synopsisContainer.appendChild(moreButton);
+
+                    moreButton.addEventListener('click', () => {
+                        if (synopsisContainer.classList.contains('expanded')) {
+                            synopsisContainer.classList.remove('expanded');
+                            synopsisContainer.textContent = truncatedSynopsis;
+                            moreButton.textContent = 'More';
+                            synopsisContainer.appendChild(document.createTextNode(' '));
+                            synopsisContainer.appendChild(moreButton);
+                        } else {
+                            synopsisContainer.classList.add('expanded');
+                            synopsisContainer.textContent = fullSynopsis;
+                            moreButton.textContent = 'Less';
+                            synopsisContainer.appendChild(document.createTextNode(' '));
+                            synopsisContainer.appendChild(moreButton);
+                        }
+                    });
+
+                    descriptionCell.appendChild(synopsisContainer);
+                    row.appendChild(descriptionCell);
+
+                    // Genre cell
+                    const genreCell = document.createElement('td');
+                    genreCell.textContent = item.genres || 'No Genre Available';
+                    row.appendChild(genreCell);
+
+                    // Episodes cell
+                    const episodesCell = document.createElement('td');
+                    episodesCell.textContent = item.Episodes || 'No Episodes Available';
+                    row.appendChild(episodesCell);
+
+                    // Rating cell
+                    const anime_id = item.anime_id;
+                    const ratingCell = document.createElement('td');
+
+                    const select = document.createElement('select');
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.textContent = '--';
+                    defaultOption.value = '';
+                    select.appendChild(defaultOption);
+
+                    for (let i = 1; i <= 10; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        select.appendChild(option);
+                    }
+
+                    // Retrieve and set the user's saved rating
+                    fetch(`/get-rating?anime_id=${anime_id}`)
+                        .then(response => response.json())
+                        .then(ratingData => {
+                            if (ratingData.rating) {
+                                select.value = ratingData.rating;
+                                item.rating = ratingData.rating; // Save rating to item
+                            } else {
+                                item.rating = 0; // Default to 0 if no rating
+                            }
+                        });
+
+                    select.addEventListener('change', function() {
+                        const selectedRating = this.value;
+
+                        fetch('/save-rating', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                anime_id: anime_id,
+                                rating: selectedRating
+                            })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                item.rating = selectedRating; // Update rating in item
+                                console.log('Rating saved successfully');
+                            } else {
+                                console.error('Failed to save rating');
+                            }
+                        });
+                    });
+
+                    ratingCell.appendChild(select);
+                    row.appendChild(ratingCell);
+
+                    tableBody.appendChild(row);
+                });
+            };
+
+            // Initial population of the table
+            populateTable(data);
+
+            // Event listener for rating column header click
+            document.querySelector("#rating-header").addEventListener('click', () => {
+                const sortedData = [...data].sort((a, b) => {
+                    const ratingA = parseFloat(a.rating) || 0; // Convert to number or 0
+                    const ratingB = parseFloat(b.rating) || 0;
+
+                    if (sortOrder === 'asc') {
+                        return ratingB - ratingA; // Descending
                     } else {
-                        synopsisContainer.classList.add('expanded');
-                        synopsisContainer.textContent = fullSynopsis;
-                        moreButton.textContent = 'Less';
+                        return ratingA - ratingB; // Ascending
                     }
                 });
 
-                synopsisContainer.appendChild(moreButton); // Append button to synopsisContainer
-                descriptionCell.appendChild(synopsisContainer);
+                populateTable(sortedData);
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'; // Toggle sort order
+            });
 
-                row.appendChild(descriptionCell);
-
-                //Genre Cell
-                const genreCell = document.createElement('td');
-                genreCell.textContent = item.genres || 'No Genre Available';
-                row.appendChild(genreCell);
-
-                // Rating cell
-                // Create a dropdown menu for the rating column
-                const anime_id = item.anime_id;
-                const ratingCell = document.createElement('td');
-
-                const select = document.createElement('select');
-
-                const defaultOption = document.createElement('option');
-                defaultOption.textContent = '--';
-                defaultOption.value = '';
-                select.appendChild(defaultOption);
-
-                for (let i = 1; i <= 10; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = i;
-                    select.appendChild(option);
-                }
-
-                // Retrieve and set the user's saved rating
-                fetch(`/get-rating?anime_id=${anime_id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.rating) {
-                            select.value = data.rating;
-                        }
-                    });
-
-                select.addEventListener('change', function() {
-                    const selectedRating = this.value;
-
-                    fetch('/save-rating', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            anime_id: anime_id,
-                            rating: selectedRating
-                        })
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            //console.log('Rating saved successfully');
-                        } else {
-                            console.error('Failed to save rating');
-                        }
-                    });
+            document.querySelector("#name-header").addEventListener('click', () => {
+                const sortedData = [...data].sort((a, b) => {
+                    const nameA = a.name || ''; // Fallback to an empty string if the name is missing
+                    const nameB = b.name || ''; // Fallback to an empty string if the name is missing
+            
+                    if (sortOrder === 'asc') {
+                        return nameA.localeCompare(nameB); // Ascending
+                    } else {
+                        return nameB.localeCompare(nameA); // Descending
+                    }
                 });
-
-                ratingCell.appendChild(select);
-                row.appendChild(ratingCell);
-
-                tableBody.appendChild(row);
+            
+                populateTable(sortedData);
+                sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'; // Toggle sort order
             });
         })
         .catch(error => console.error('Error fetching session data:', error));
