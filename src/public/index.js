@@ -23,8 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         const nameSpan = document.createElement('span');
                         nameSpan.textContent = result.name;
-                        resultItem.appendChild(nameSpan);
+                        nameSpan.style.cursor = 'pointer'; // Change cursor to pointer for clickable effect
+
+                        // Event listener to redirect to the anime page
+                        nameSpan.addEventListener('click', function() {
+                            window.location.href = `/go-to-anime/${result.anime_id}`; // Redirect to dynamic route
+                        });
+
+                        resultItem.appendChild(nameSpan)
                         
+
                         const actionButton = document.createElement('button');
                         actionButton.title = result.isFavorited ? "Remove from Favorites" : "Add to Favorites";
                         actionButton.classList.add('list-add');
@@ -167,6 +175,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         updateCarousel();
     });
+
+    const imageContainers = document.querySelectorAll(".image-container");
+    imageContainers.forEach(container => {
+        const image = container.querySelector("img");
+        const animeId = container.querySelector(".favorite-button").getAttribute("data-anime-id");
+        
+        image.addEventListener("click", function() {
+            if (animeId) {
+                window.location.href = `/go-to-anime/${animeId}`;
+            } else {
+                console.error("Anime ID not found");
+            }
+        });
+    });
+
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -193,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
             favoriteButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const animeId = button.getAttribute('data-anime-id');
+
                     const icon = button.querySelector('span');
                     const isFavorited = icon.style.color === 'red';
 
@@ -220,7 +244,10 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
         });
+
 });
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login');

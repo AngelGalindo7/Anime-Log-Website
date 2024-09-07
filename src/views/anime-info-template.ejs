@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= anime ? anime.Name : "Anime Page" %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .anime-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .anime-image {
+            width: 300px;
+            height: 450px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .anime-details {
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .anime-details h1, .anime-details h2 {
+            margin: 10px 0;
+        }
+
+        .anime-description {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0;
+        }
+
+        .anime-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .anime-stat {
+            font-size: 14px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="anime-container">
+        <!-- Anime Image Placeholder -->
+        <div id="anime-image" class="anime-image">
+            <p>Anime Image</p>
+        </div>
+
+        <!-- Anime Title -->
+        <div class="anime-details">
+            <h1 id="anime-title"><%= anime ? anime.Name : "Anime Title Not Available" %></h1>
+
+            <!-- Anime Description -->
+            <p id="anime-description" class="anime-description">
+                <%= anime ? anime.sypnopsis : "No description available for this anime." %>
+            </p>
+
+            <!-- Anime Stats -->
+            <div class="anime-stats">
+                <div class="anime-stat">
+                    <h2>Score</h2>
+                    <p id="anime-score"><%= anime ? anime.Score : "N/A" %></p>
+                </div>
+                <div class="anime-stat">
+                    <h2>Genres</h2>
+                    <p id="anime-genre"><%= anime ? anime.Genres : "N/A" %></p>
+                </div>
+                <div class="anime-stat">
+                    <h2>Type</h2>
+                    <p id="anime-type"><%= anime ? anime.Type : "N/A" %></p>
+                </div>
+                <div class="anime-stat">
+                    <h2>Episodes</h2>
+                    <p id="anime-episodes"><%= anime ? anime.Episodes : "N/A" %></p>
+                </div>
+                <div class="anime-stat">
+                    <h2>Aired</h2>
+                    <p id="anime-aired"><%= anime ? anime.Aired : "N/A" %></p>
+                </div>
+                <div class="anime-stat">
+                    <h2>Studio</h2>
+                    <p id="anime-studio"><%= anime ? anime.Studios : "N/A" %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -37,8 +37,8 @@ app.use(session({
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
-// app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files (e.g., index.html)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -61,6 +61,7 @@ app.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'about.html'));
     //res.render('index', { title: 'IM AT THE ABOUT PAGE' });
 });
+
 
 app.get('/fetch-list-data', (req, res) => {
     if (!req.session.loggedIn) {
@@ -108,6 +109,7 @@ app.get('/list', (req, res) => {
     //res.render('index', { title: 'IM AT THE LIST PAGE' });
 });
 
+//TODO: Change name to fetch
 app.get('/get-list-data', (req, res) => {
     // Retrieve data from session
     const listData = req.session.listData || [];
@@ -130,6 +132,28 @@ app.get('/get-rating', (req, res) => {
 
         res.json({ rating: results.length > 0 ? results[0].rating : null });
     });
+});
+
+
+app.get('/go-to-anime/:anime_id', (req,res) => {
+    const anime_id = req.params.anime_id;
+    const user_id = req.session.user_id;
+    const query = 'SELECT Name, Score, Genres, sypnopsis, Type, Episodes, Aired, Studios FROM anime_filtered WHERE anime_id = ?';
+    const formattedQuery = mysql.format(query, [anime_id]);
+
+    db.query(formattedQuery, (err, results) => {
+        if(err) {
+            console.log('Error retrieving rating:', err);
+            return res.status(500).send('Error retrieving rating');
+        }
+        if (results.length > 0) {
+            // Send the first row's details (assuming anime_id is unique)
+            res.render('anime-info-template', { anime: results[0] });
+        } else {
+            res.render('anime-info-template', { anime: null });
+        }
+    });
+
 });
 
 
