@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         nameSpan.style.cursor = 'pointer'; // Change cursor to pointer for clickable effect
 
                         // Event listener to redirect to the anime page
-                        nameSpan.addEventListener('click', function() {
+                        resultItem.addEventListener('click', function() {
                             window.location.href = `/go-to-anime/${result.anime_id}`; // Redirect to dynamic route
                         });
 
@@ -179,6 +179,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const imageContainers = document.querySelectorAll(".image-container");
     imageContainers.forEach(container => {
         const image = container.querySelector("img");
+        image.style.cursor = 'pointer';
         const animeId = container.querySelector(".favorite-button").getAttribute("data-anime-id");
         
         image.addEventListener("click", function() {
