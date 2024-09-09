@@ -161,6 +161,8 @@ app.post('/save-rating', (req, res) => {
     const { anime_id, rating } = req.body;
     const user_id = req.session.user_id;
 
+    //console.log('Saving rating for user:', user_id, 'anime:', anime_id, 'rating:', rating);
+
     const query = `
         INSERT INTO favorites (uuid, anime_id, rating)
         VALUES (?, ?, ?)
