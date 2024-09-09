@@ -29,15 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         resultItem.addEventListener('click', function() {
                             window.location.href = `/go-to-anime/${result.anime_id}`; // Redirect to dynamic route
                         });
-
-                        resultItem.appendChild(nameSpan)
                         
-
                         const actionButton = document.createElement('button');
                         actionButton.title = result.isFavorited ? "Remove from Favorites" : "Add to Favorites";
                         actionButton.classList.add('list-add');
                         actionButton.innerHTML = `<span class="material-symbols-outlined" style="color: ${result.isFavorited ? 'red' : 'white'};">favorite</span>`;
-                        actionButton.addEventListener('click', function() {
+                        actionButton.addEventListener('click', function(event) {
+                            event.stopPropagation();
                             fetch('/favorite', {
                                 method: 'POST',
                                 headers: {
@@ -55,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                         });
                         
-                        resultItem.appendChild(actionButton);    
+                        resultItem.appendChild(nameSpan); 
+                        resultItem.appendChild(actionButton);   
                         resultsDiv.appendChild(resultItem);
                     });
                 } else {
