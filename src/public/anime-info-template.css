@@ -1,0 +1,94 @@
+body {
+    background-color: rgb(43, 39, 39);
+}
+
+/* Main container for the layout */
+.anime-container {
+    display: flex; /* Use flexbox for horizontal layout */
+    align-items: flex-start; /* Align items to the top */
+    gap: 20px; /* Space between image and details section */
+    padding: 20px;
+}
+
+/* Section for image and favorite button */
+.img-favorite {
+    display: flex;
+    flex-direction: column; /* Stack image and button vertically */
+    align-items: center; /* Center items horizontally */
+    gap: 10px; /* Space between image and button */
+}
+
+/* Image styling */
+.anime-image img {
+    width: 300px; /* Adjust width as needed */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional: rounded corners */
+    object-fit: cover; /* Ensure image covers the area without distortion */
+}
+
+/* Favorite button styling */
+.favorite-button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: red;
+    color:red;
+}
+
+/* Container for details and stats */
+.anime-details-container {
+    display: flex; /* Use flexbox for horizontal layout */
+    gap: 20px; /* Space between description and stats */
+    color: whitesmoke;
+}
+
+/* Anime details section */
+.anime-details {
+    flex: 1; /* Takes up remaining space */
+    padding: 40px;
+}
+
+#anime-title {
+    color: rgb(247, 154, 5); /* Orange color for title */
+    font-size: 2em; /* Increase font size for the title */
+}
+
+.stats {
+    color:orange;
+    font-size: 20pt;
+}
+
+/* Title and description styling */
+.anime-details h1 {
+    margin: 0; /* Remove default margin */
+}
+
+.anime-details p {
+    margin: 10px 0; /* Add some vertical space around the description */
+    font-size: 1em; /* Adjust font size for the description */
+}
+
+/* Stats section styling */
+.anime-stats {
+    flex: 0 0 350px; /* Increase width for stats section */
+    padding: 20px; /* Add more padding */
+    border: 1px solid #ddd; /* Optional: border around stats section */
+    background-color: #2e2c2c;
+    border-radius: 8px; /* Optional: rounded corners */
+}
+
+.anime-stat {
+    margin-bottom: 20px; /* Space between each stat item */
+}
+
+.anime-stat h2 {
+    font-size: 1.3em; /* Increase font size for headings */
+    margin-bottom: 5px; /* Space below heading */
+    color:rgb(247, 154, 5);
+}
+
+.anime-stat p {
+    font-size: 1.1em; /* Increase font size for stat values */
+    color: whitesmoke; /* Text color */
+}
