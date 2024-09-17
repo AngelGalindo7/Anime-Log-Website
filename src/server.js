@@ -37,6 +37,8 @@ app.use(session({
     cookie: { secure: false } // Set to true if using HTTPS
 }));
 
+app.use(express.static('public'));
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 

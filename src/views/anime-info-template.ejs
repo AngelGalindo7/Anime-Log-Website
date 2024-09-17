@@ -3,75 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/anime-info-template.css">
     <title><%= anime ? anime.Name : "Anime Page" %></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        .anime-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .anime-image {
-            width: 300px;
-            height: 450px;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .anime-details {
-            max-width: 600px;
-            text-align: center;
-        }
-
-        .anime-details h1, .anime-details h2 {
-            margin: 10px 0;
-        }
-
-        .anime-description {
-            font-size: 16px;
-            color: #555;
-            margin: 15px 0;
-        }
-
-        .anime-stats {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .anime-stat {
-            font-size: 14px;
-            margin: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="anime-container">
-        <!-- Anime Image Placeholder -->
-        <div id="anime-image" class="anime-image">
-            <p>Anime Image</p>
+        <!-- Image and Favorite button section -->
+        <div class="img-favorite">
+            <div id="anime-image" class="anime-image">
+                <img src="https://a.storyblok.com/f/178900/750x875/1046c88ea4/ramenakaneko_teaser2.jpg/m/filters:quality(95)format(webp)" alt="Anime Image">
+            </div>
+            <div id="favorite-button" class="favorite-button">
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+            </div>
         </div>
-
-        <!-- Anime Title -->
-        <div class="anime-details">
-            <h1 id="anime-title"><%= anime ? anime.Name : "Anime Title Not Available" %></h1>
-
-            <!-- Anime Description -->
-            <p id="anime-description" class="anime-description">
-                <%= anime ? anime.sypnopsis : "No description available for this anime." %>
-            </p>
-
-            <!-- Anime Stats -->
+        <!-- Anime Details and Stats section -->
+        <div class="anime-details-container">
+            <div class="anime-details">
+                <h1 id="anime-title"><%= anime ? anime.Name : "Anime Title Not Available" %></h1>
+                <p id="anime-description" class="anime-description">
+                    <%= anime ? anime.sypnopsis : "No description available for this anime." %>
+                </p>
+            </div>
+            <!-- Stats section -->
             <div class="anime-stats">
+                <div class="stats">
+                    <p id="stats">Stats</p>
+                </div>
                 <div class="anime-stat">
                     <h2>Score</h2>
                     <p id="anime-score"><%= anime ? anime.Score : "N/A" %></p>
