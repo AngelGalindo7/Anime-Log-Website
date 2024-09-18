@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recommendations</title>
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('/api/recommendation')
-                .then(response => response.json())
-                .then(data => {
-                    const resultsContainer = document.getElementById('results');
-                    resultsContainer.innerHTML = data.map(item => `<li>${item.name}</li>`).join('');
-                })
-                .catch(error => {
-                    console.error('Error fetching recommendations:', error);
-                });
-        });
-    </script> -->
+    <link rel="stylesheet" href="recommendation-styles.css">
 </head>
 <body>
-    <h1>Recommendations</h1>
-    <ul id="results">
-        <!-- Recommendations will be displayed here -->
-    </ul>
+    <h1>Your Recommendations</h1>
+    <div class="recommendation-box">
+        <div class="recommendation-item">Item 1</div>
+        <div class="recommendation-item">Item 2</div>
+        <div class="recommendation-item">Item 3</div>
+        <div class="recommendation-item">Item 4</div>
+        <div class="recommendation-item">Item 5</div>
+    </div>
 </body>
+<script>
+    fetch('/header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.body.insertAdjacentHTML('afterbegin', data);
+        });
+</script>
 </html>

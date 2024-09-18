@@ -1,0 +1,39 @@
+body {
+    background-color: rgb(43, 39, 39);
+}
+
+h1{
+    margin-top: 50px;
+    margin-bottom: 100px;
+    text-align: center;
+    color: rgb(221, 140, 34);
+    font-size: 52pt;
+}
+
+.recommendation-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 15px solid rgb(221, 140, 34);
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    height: 500px;
+}
+
+.recommendation-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1; /* Each item will take up equal space */
+    margin: 0 10px; /* Optional margin between items */
+    padding: 20px; /* Adds padding inside the item boxes */
+    background-color: #494848; /* Example background color for visibility */
+    text-align: center; /* Center the content inside the box */
+    border: 5px solid #ccc; /* Example border for each item */
+    box-sizing: border-box; /* Include padding and border in the width calculations */
+    color:whitesmoke;
+    height: 440px;
+    font-size: 24pt;
+}

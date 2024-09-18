@@ -9,4 +9,11 @@
 <body>
     <h1>Welcome to Your Profile</h1>
 </body>
+<script>
+    fetch('/header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.body.insertAdjacentHTML('afterbegin', data);
+        });
+</script>
 </html>
