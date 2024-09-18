@@ -140,7 +140,7 @@ app.get('/get-rating', (req, res) => {
 app.get('/go-to-anime/:anime_id', (req,res) => {
     const anime_id = req.params.anime_id;
     const user_id = req.session.user_id;
-    const query = 'SELECT Name, Score, Genres, sypnopsis, Type, Episodes, Aired, Studios FROM anime_filtered WHERE anime_id = ?';
+    const query = 'SELECT Name, Score, Genres, sypnopsis, Type, Episodes, anime_id, Aired, Studios FROM anime_filtered WHERE anime_id = ?';
     const formattedQuery = mysql.format(query, [anime_id]);
 
     db.query(formattedQuery, (err, results) => {

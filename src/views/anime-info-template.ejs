@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/anime-info-template.css">
     <title><%= anime ? anime.Name : "Anime Page" %></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 </head>
 <body>
     <div class="anime-container">
@@ -13,9 +14,12 @@
             <div id="anime-image" class="anime-image">
                 <img src="https://a.storyblok.com/f/178900/750x875/1046c88ea4/ramenakaneko_teaser2.jpg/m/filters:quality(95)format(webp)" alt="Anime Image">
             </div>
-            <div id="favorite-button" class="favorite-button">
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
-            </div>
+            <div class="favorite-button">
+                <button id="favorite-button" data-anime-id="<%= anime.anime_id %>" title="<%= anime.isFavorited ? 'Remove from Favorites' : 'Add to Favorites' %>" class="list-add <%= anime.isFavorited ? 'favorited' : '' %>">
+                    <span class="material-symbols-outlined" style="color: <%= anime.isFavorited ? 'white' : 'black' %>;">favorite</span>
+                </button>
+    </div>
+
         </div>
         <!-- Anime Details and Stats section -->
         <div class="anime-details-container">
@@ -57,6 +61,7 @@
             </div>
         </div>
     </div>
+    <script src="/anime-info.js"></script>
 </body>
 <script>
     fetch('/header.html')

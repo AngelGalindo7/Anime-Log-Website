@@ -2,6 +2,56 @@ body {
     background-color: rgb(43, 39, 39);
 }
 
+/* General button styles */
+.favorite-button button {
+    padding: 8px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: transparent; /* No background initially */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Main button styling */
+.favorite-button {
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: transparent; /* Default to transparent */
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+/* Filled red when favorited */
+.favorite-button.favorited {
+    background-color: red; /* Red background for favorited state */
+    color: red; /* Red icon color */
+}
+
+/* Icon styling */
+.favorite-button .material-symbols-outlined {
+    font-size: 36px; /* Adjust icon size */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+/* Button hover effect */
+.favorite-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle background on hover */
+}
+
+/* Change color based on favorite status */
+.favorite-button .favorited .material-symbols-outlined {
+    color: red !important; /* Red if favorited */
+}
+
+.favorite-button .unfavorited .material-symbols-outlined {
+    color: white !important; /* White if not favorited */
+}
+
 /* Main container for the layout */
 .anime-container {
     display: flex; /* Use flexbox for horizontal layout */
@@ -26,15 +76,7 @@ body {
     object-fit: cover; /* Ensure image covers the area without distortion */
 }
 
-/* Favorite button styling */
-.favorite-button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: red;
-    color:red;
-}
+
 
 /* Container for details and stats */
 .anime-details-container {
