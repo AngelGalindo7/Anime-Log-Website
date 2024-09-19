@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const { exec } = require('child_process');
 const mysql = require('mysql2');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -410,6 +411,32 @@ app.get('/get-favorites', (req, res) => {
         res.json({ favoriteAnimeIds });
     });
 });
+
+// app.post('/run-script', (req, res) => {
+//     exec('python src/load_model.py', (error, stdout, stderr) => {
+//         if (error) {
+//             return res.status(500).json({ error: error.message });
+//         }
+//         if (stderr) {
+//             return res.status(400).json({ error: stderr });
+//         }
+//         res.json({ output: stdout });
+//     });
+// });
+
+app.post('/run-script', (req, res) => {
+    const scriptPath = path.join(__dirname, 'load_model.py');
+    
+    exec(`python "${scriptPath}"`, (error, stdout, stderr) => {
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+        if (stderr) {
+            return res.status(400).json({ error: stderr });
+        }
+        res.json({ output: stdout });
+    });
+})
 
 // Handle all other routes
 app.use((req, res) => {
