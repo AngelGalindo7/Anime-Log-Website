@@ -16,3 +16,4 @@ Thumbs.db
 
 __pycache__/
 config.py
+src/datasets/users-score-2023.csv
